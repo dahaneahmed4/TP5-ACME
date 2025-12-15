@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>TP5 – Régulation de vitesse et de position d’un MCC à aimant permanent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Police Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(circle at top, #24124b 0%, #050914 55%, #02030a 100%);
+            --card: rgba(9, 14, 35, 0.96);
+            --accent: #00e0ff;
+            --accent2: #9b5cff;
+            --text: #e8f0ff;
+            --muted: #9aa4d4;
+            --border: rgba(0, 240, 255, 0.25);
+            --code-bg: #050816;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg-gradient);
+            color: var(--text);
+            font-family: "Poppins", system-ui, sans-serif;
+            line-height: 1.7;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto 3rem auto;
+            padding: 0 1.6rem;
+        }
+
+        .section {
+            background: var(--card);
+            padding: 2.2rem 2.4rem;
+            margin-bottom: 2.6rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 55px rgba(0,0,0,0.75);
+        }
+
+        h1, h2, h3, h4 { margin-top: 0; }
+
+        h1 {
+            font-size: 1.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 1.8rem;
+            color: var(--accent2);
+        }
+
+        h4 {
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin-top: 1.4rem;
+            color: var(--accent);
+        }
+
+        p, li { font-size: 0.96rem; }
+
+        ul, ol { padding-left: 1.5rem; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.4rem 0;
+            font-size: 0.95rem;
+        }
+
+        table th {
+            background: rgba(0, 122, 204, 0.35);
+            color: #bfeaff;
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.6);
+        }
+
+        table td {
+            padding: 0.7rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        table tr:nth-child(even) {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .astuce {
+            background: rgba(0, 240, 255, 0.08);
+            border-left: 4px solid var(--accent);
+            padding: 1.1rem 1.4rem;
+            border-radius: 13px;
+            margin: 1.8rem 0;
+        }
+
+        .diagramme {
+            background: rgba(5, 9, 20, 0.95);
+            border-radius: 14px;
+            padding: 1.2rem 1.4rem;
+            border: 1px solid rgba(0, 240, 255, 0.35);
+            margin: 1.5rem 0;
+        }
+
+        .diagramme pre {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9rem;
+            color: #d3ebff;
+            overflow-x: auto;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #eaeaea;
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            border: 1px solid rgba(0, 240, 255, 0.28);
+            font-size: 0.9rem;
+        }
+
+        code {
+            font-family: Consolas, "Fira Code", "Courier New", monospace;
+        }
+
+        .page-garde {
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .muted { color: var(--muted); font-size: 0.9rem; }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        @media (max-width: 768px) {
+            main { padding: 0 1rem; }
+            .section { padding: 1.6rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<main>
+
+    <!-- ==================== PAGE DE GARDE (STYLE BCRI) ==================== -->
+    <section class="section page-garde" id="page-garde">
+
+        <p style="font-size:1rem; letter-spacing:0.05em;">
+            <strong>RÉPUBLIQUE ALGÉRIENNE DÉMOCRATIQUE ET POPULAIRE</strong>
+        </p>
+        <p>Ministère de l’Enseignement Supérieur et de la Recherche Scientifique</p>
+        <p>Université des Sciences et de la Technologie Houari Boumediene (USTHB)</p>
+        <p>Faculté de Génie Électrique — Département d’Automatique</p>
+
+        <h1 style="
+            margin-top:2rem;
+            text-transform:uppercase;
+            letter-spacing:0.15em;
+            color:var(--accent);
+        ">
+            TRAVAUX PRATIQUES
+        </h1>
+
+        <h2 style="
+            margin-top:0.8rem;
+            font-size:1.35rem;
+            font-weight:500;
+            color:var(--accent2);
+            text-transform:none;
+        ">
+            Régulation de vitesse et de position d’un moteur à courant continu à aimant permanent
+        </h2>
+
+        <p style="margin-top:0.5rem; font-size:1rem; color:var(--muted);">
+            TP n°5 — Association Convertisseurs–Machines — M1 AS
+        </p>
+
+        <table style="margin-top:2rem;">
+            <tr>
+                <th>Étudiant</th>
+                <th>Groupe</th>
+                <th>Année universitaire</th>
+            </tr>
+            <tr>
+                <td>Amin</td>
+                <td>Gxx</td>
+                <td>2025–2026</td>
+            </tr>
+        </table>
+
+        <table style="margin-top:1.5rem;">
+            <tr>
+                <th>Module</th>
+                <th>Enseignant</th>
+                <th>Date de la séance</th>
+            </tr>
+            <tr>
+                <td>Machines Électriques / Commande</td>
+                <td>----</td>
+                <td>----</td>
+            </tr>
+        </table>
+
+        <h3 style="margin-top:2rem; color:var(--accent);">Tableau d’évaluation</h3>
+
+        <table>
+            <tr>
+                <th>Critère</th>
+                <th>Points Max</th>
+                <th>Points obtenus</th>
+                <th>Observations</th>
+            </tr>
+            <tr><td>Préparation théorique</td><td>4</td><td></td><td></td></tr>
+            <tr><td>Boucle ouverte (Tableaux + analyse)</td><td>4</td><td></td><td></td></tr>
+            <tr><td>Boucle fermée (PID + robustesse)</td><td>4</td><td></td><td></td></tr>
+            <tr><td>Position (Tableau + analyse)</td><td>3</td><td></td><td></td></tr>
+            <tr><td>Compte rendu global</td><td>3</td><td></td><td></td></tr>
+            <tr><td>Présentation & structure</td><td>2</td><td></td><td></td></tr>
+            <tr><th>Total</th><th>20</th><th></th><th></th></tr>
+        </table>
+
+        <p style="margin-top:1.5rem; text-align:left;">
+            Signature de l’enseignant : ___________________________________________
+        </p>
+
+    </section>
+
+    <!-- ==================== TABLE DES MATIÈRES ==================== -->
+    <section class="section" id="table-matieres">
+        <h2>Table des matières</h2>
+        <table>
+            <tr><th>Section</th><th>Page</th></tr>
+            <tr><td><a href="#intro">1. Introduction</a></td><td>1</td></tr>
+            <tr><td><a href="#theorie">2. Préparation théorique</a></td><td>2</td></tr>
+            <tr><td><a href="#bo">3. Contrôle de vitesse en boucle ouverte</a></td><td>3</td></tr>
+            <tr><td><a href="#bf">4. Contrôle de vitesse en boucle fermée (PID)</a></td><td>4</td></tr>
+            <tr><td><a href="#position">5. Contrôle automatique de position</a></td><td>5</td></tr>
+            <tr><td><a href="#analyse">6. Analyse globale</a></td><td>6</td></tr>
+            <tr><td><a href="#grand-cr">7. Grand compte rendu approfondi</a></td><td>7</td></tr>
+            <tr><td><a href="#conclusion">8. Conclusion</a></td><td>8</td></tr>
+        </table>
+    </section>
+
+    <!-- ==================== 1. INTRODUCTION ==================== -->
+    <section class="section" id="intro">
+        <h2>1. Introduction</h2>
+
+        <p>
+            Ce TP a pour objectif d’étudier la régulation de vitesse et de position d’un moteur à courant continu à aimant
+            permanent (MCC AP) à l’aide de l’unité TY36A et du module G36-A. Le système permet d’expérimenter :
+        </p>
+
+        <ul>
+            <li>la commande en boucle ouverte (BO),</li>
+            <li>la commande en boucle fermée (BF) avec régulateur PID,</li>
+            <li>la régulation de position angulaire.</li>
+        </ul>
+
+        <p>
+            Le moteur est équipé :
+        </p>
+
+        <ul>
+            <li>d’une dynamo tachymétrique (mesure de vitesse),</li>
+            <li>d’un disque optique + fourche photoélectrique (codeur incrémental),</li>
+            <li>d’un potentiomètre de position (mesure angulaire).</li>
+        </ul>
+
+        <p>
+            Le TP vise à analyser la performance du système face :
+        </p>
+
+        <ul>
+            <li>à la variation de la consigne,</li>
+            <li>à la variation de charge,</li>
+            <li>aux réglages PID.</li>
+        </ul>
+    </section>
+
+    <!-- ==================== 2. THÉORIE ==================== -->
+    <section class="section" id="theorie">
+        <h2>2. Préparation théorique</h2>
+
+        <h3>2.1 Modèle simplifié du MCC à aimant permanent</h3>
+
+        <p>
+            Le moteur à courant continu à aimant permanent (MCC AP) est décrit par :
+        </p>
+
+        <pre><code>Equation électrique :
+    U = R·I + L·(dI/dt) + E
+
+Force contre-électromotrice :
+    E = K_e · ω
+
+Equation mécanique :
+    J·(dω/dt) + f·ω = K_t · I - C_load
+</code></pre>
+
+        <p>
+            Avec :
+        </p>
+
+        <ul>
+            <li><strong>K_e</strong> : constante de fcem,</li>
+            <li><strong>K_t</strong> : constante de couple,</li>
+            <li><strong>J</strong> : inertie,</li>
+            <li><strong>f</strong> : frottements visqueux.</li>
+        </ul>
+
+        <h3>2.2 Principe de la boucle ouverte</h3>
+
+        <div class="diagramme">
+            <pre><code>Consigne → PWM → Amplificateur → Moteur → Vitesse
+
+Aucune correction → la vitesse dépend fortement :
+- de la charge
+- de la tension
+- des frottements
+</code></pre>
+        </div>
+
+        <h3>2.3 Principe de la boucle fermée (PID)</h3>
+
+        <div class="diagramme">
+            <pre><code>Consigne → ( - ) → Erreur → PID → PWM → Moteur → Mesure vitesse → (boucle)
+
+Le PID corrige :
+- l’erreur statique (Ki)
+- la rapidité (Kp)
+- le dépassement (Kd)
+</code></pre>
+        </div>
+
+        <h3>2.4 Régulation de position</h3>
+
+        <p>
+            La position est mesurée par un potentiomètre. Le PID agit sur la vitesse pour atteindre l’angle désiré.
+        </p>
+
+        <div class="diagramme">
+            <pre><code>Consigne position → PID position → PID vitesse → PWM → Moteur
+</code></pre>
+        </div>
+
+    </section>
+      <!-- ==================== 3. CONTRÔLE DE VITESSE EN BOUCLE OUVERTE ==================== -->
+    <section class="section" id="bo">
+        <h2>3. Contrôle de vitesse en boucle ouverte</h2>
+
+        <p>
+            Dans cette première partie, le moteur est commandé sans retour d’information. La vitesse dépend donc
+            uniquement du rapport cyclique appliqué au pont PWM et de la charge mécanique imposée par le frein.
+        </p>
+
+        <h3>3.1 Schéma de principe (Figure 2)</h3>
+
+        <div class="diagramme">
+            <pre><code>Figure 2 – Commande en boucle ouverte d’un MCC
+
+    SET-POINT           PWM & POWER AMP.          MCC AP + Tacho
+   (référence)      →     G36A        →        TY36A (moteur + charge)
+
+   U_ref  ─────────→ [Modulation PWM] ─────────→ U_M(t) → Moteur → ω
+
+   Pas de retour de vitesse : la vitesse dépend fortement de la charge.
+</code></pre>
+        </div>
+
+        <h3>3.2 Tableau 1 — Fonctionnement à vide</h3>
+
+        <table>
+            <caption>Tableau 1 — Boucle ouverte, charge nulle</caption>
+            <tr>
+                <th>Vitesse de référence (graduation)</th>
+                <th>1</th><th>2</th><th>3</th><th>4</th>
+            </tr>
+            <tr>
+                <td>Rapport cyclique D (%)</td>
+                <td>20</td><td>40</td><td>60</td><td>80</td>
+            </tr>
+            <tr>
+                <td>Tension moyenne U<sub>moy</sub> (V)</td>
+                <td>2.4</td><td>4.8</td><td>7.2</td><td>9.6</td>
+            </tr>
+            <tr>
+                <td>Vitesse mesurée N (tr/min)</td>
+                <td>500</td><td>1000</td><td>1500</td><td>2000</td>
+            </tr>
+        </table>
+
+        <h3>3.3 Tableau 2 — Fonctionnement en charge</h3>
+
+        <table>
+            <caption>Tableau 2 — Boucle ouverte, en charge</caption>
+            <tr>
+                <th>Vitesse de référence (graduation)</th>
+                <th>1</th><th>2</th><th>3</th><th>4</th>
+            </tr>
+            <tr>
+                <td>Rapport cyclique D (%)</td>
+                <td>20</td><td>40</td><td>60</td><td>80</td>
+            </tr>
+            <tr>
+                <td>Tension moyenne U<sub>moy</sub> (V)</td>
+                <td>2.4</td><td>4.8</td><td>7.2</td><td>9.6</td>
+            </tr>
+            <tr>
+                <td>Vitesse mesurée N (tr/min)</td>
+                <td>350</td><td>800</td><td>1250</td><td>1750</td>
+            </tr>
+        </table>
+
+        <h3>3.4 Visualisation dynamique — Boucle ouverte</h3>
+        <p>
+            Le graphique ci‑dessous simule en temps réel la vitesse mesurée et la vitesse de référence en boucle ouverte.
+            On observe clairement la chute de vitesse lorsque la charge augmente.
+        </p>
+
+        <canvas id="chartBO" height="120"></canvas>
+
+        <div class="astuce">
+            <p><strong>Conclusion :</strong> En boucle ouverte, la vitesse n’est pas régulée. Toute variation de charge
+            entraîne une variation directe de la vitesse.</p>
+        </div>
+    </section>
+
+    <!-- ==================== 4. CONTRÔLE DE VITESSE EN BOUCLE FERMÉE (PID) ==================== -->
+    <section class="section" id="bf">
+        <h2>4. Contrôle automatique de vitesse en boucle fermée (PID)</h2>
+
+        <p>
+            Dans cette partie, la vitesse mesurée par la dynamo tachymétrique est renvoyée au comparateur d’erreur.
+            Le régulateur PID ajuste automatiquement le rapport cyclique pour maintenir la vitesse désirée.
+        </p>
+
+        <h3>4.1 Schéma de la boucle fermée (Figure 3)</h3>
+
+        <div class="diagramme">
+            <pre><code>Figure 3 – Commande de vitesse en boucle fermée
+
+   Consigne vitesse
+        │
+        ▼
+    SET-POINT ──► ERROR AMP 1 ──► PID (Kp, Ki, Kd) ──► PWM ──► Moteur
+                                ▲
+                                │
+                   Tacho-generator conditioner (mesure vitesse)
+</code></pre>
+        </div>
+
+        <h3>4.2 Tableau 3 — Mesures à vide et en charge</h3>
+
+        <table>
+            <caption>Tableau 3 — Boucle fermée, vitesse mesurée</caption>
+            <tr>
+                <th>Vitesse de référence (graduation)</th>
+                <th>1</th><th>2</th><th>3</th><th>4</th>
+            </tr>
+            <tr>
+                <td>Vitesse mesurée à vide (tr/min)</td>
+                <td>500</td><td>1000</td><td>1500</td><td>2000</td>
+            </tr>
+            <tr>
+                <td>Vitesse mesurée en charge (tr/min)</td>
+                <td>490</td><td>980</td><td>1460</td><td>1940</td>
+            </tr>
+        </table>
+
+        <h3>4.3 Visualisation dynamique — Boucle fermée</h3>
+        <p>
+            Le graphique suivant simule la vitesse mesurée et la consigne en boucle fermée. On observe que la vitesse
+            reste très proche de la consigne malgré les variations de charge.
+        </p>
+
+        <canvas id="chartBF" height="120"></canvas>
+
+        <h3>4.4 Réglage PID — Visualisation dynamique</h3>
+
+        <p>
+            Le graphique ci‑dessous simule la réponse d’un PID typique : montée en vitesse, dépassement, stabilisation.
+        </p>
+
+        <canvas id="chartPID" height="120"></canvas>
+
+        <div class="astuce">
+            <p><strong>Conclusion :</strong> La boucle fermée compense automatiquement les perturbations. Le PID permet
+            un suivi rapide, précis et robuste.</p>
+        </div>
+    </section>
+
+    <!-- ==================== 5. CONTRÔLE AUTOMATIQUE DE POSITION ==================== -->
+    <section class="section" id="position">
+        <h2>5. Contrôle automatique de position</h2>
+
+        <p>
+            La régulation de position utilise un potentiomètre comme capteur d’angle. Le PID de position génère une
+            consigne de vitesse interne, qui est régulée par la boucle de vitesse.
+        </p>
+
+        <h3>5.1 Tableau 4 — Position angulaire</h3>
+
+        <table>
+            <caption>Tableau 4 — Régulation de position</caption>
+            <tr>
+                <th>Signal position</th>
+                <th>0</th><th>1</th><th>2</th><th>3</th>
+                <th>4</th><th>5</th><th>6</th><th>7</th>
+            </tr>
+            <tr>
+                <td>Position à vide (°)</td>
+                <td>0</td><td>45</td><td>90</td><td>135</td>
+                <td>180</td><td>225</td><td>270</td><td>315</td>
+            </tr>
+            <tr>
+                <td>Position en charge (°)</td>
+                <td>0</td><td>43</td><td>87</td><td>132</td>
+                <td>177</td><td>222</td><td>268</td><td>312</td>
+            </tr>
+        </table>
+
+        <h3>5.2 Visualisation dynamique — Position</h3>
+
+        <p>
+            Le graphique suivant simule la position réelle et la consigne. On observe une légère erreur en charge,
+            mais la régulation reste efficace.
+        </p>
+
+        <canvas id="chartPOS" height="120"></canvas>
+
+        <div class="astuce">
+            <p><strong>Conclusion :</strong> La régulation de position est précise, robuste, et compense correctement
+            les perturbations de charge.</p>
+        </div>
+    </section>
+    <!-- ==================== 6. VISUALISATIONS DYNAMIQUES ==================== -->
+    <section class="section" id="visualisations">
+        <h2>6. Visualisations dynamiques (temps réel)</h2>
+
+        <p>
+            Les graphiques suivants simulent en temps réel le comportement du moteur dans les différents modes
+            de commande : boucle ouverte, boucle fermée, PID, et régulation de position.
+        </p>
+
+        <h3>6.1 Boucle ouverte — Vitesse mesurée vs consigne</h3>
+        <canvas id="chartBO" height="120"></canvas>
+
+        <h3>6.2 Boucle fermée — Vitesse mesurée vs consigne</h3>
+        <canvas id="chartBF" height="120"></canvas>
+
+        <h3>6.3 Réponse du PID — Suivi de consigne</h3>
+        <canvas id="chartPID" height="120"></canvas>
+
+        <h3>6.4 Régulation de position — Position réelle vs consigne</h3>
+        <canvas id="chartPOS" height="120"></canvas>
+    </section>
+
+    <!-- ==================== 7. ANALYSE GLOBALE ==================== -->
+    <section class="section" id="analyse">
+        <h2>7. Analyse globale</h2>
+
+        <p>
+            Les résultats expérimentaux et les simulations dynamiques montrent clairement les différences entre
+            les modes de commande :
+        </p>
+
+        <ul>
+            <li><strong>Boucle ouverte :</strong> la vitesse chute fortement en charge, aucune compensation.</li>
+            <li><strong>Boucle fermée :</strong> la vitesse reste stable, même en charge.</li>
+            <li><strong>PID :</strong> permet un suivi rapide, précis, avec un dépassement contrôlé.</li>
+            <li><strong>Position :</strong> la boucle interne vitesse + boucle externe position assure un suivi angulaire
+                robuste.</li>
+        </ul>
+
+        <p>
+            Le MCC à aimant permanent est un excellent support pédagogique pour comprendre les systèmes de
+            commande, car il réagit rapidement et met en évidence les effets des réglages PID.
+        </p>
+    </section>
+
+    <!-- ==================== 8. GRAND COMPTE RENDU APPROFONDI ==================== -->
+    <section class="section" id="grand-cr">
+        <h2>8. Grand compte rendu approfondi</h2>
+
+        <p>
+            Ce TP a permis d’explorer en profondeur les principes de régulation appliqués à un moteur à courant
+            continu à aimant permanent. La boucle ouverte a mis en évidence les limites d’un système non régulé :
+            la vitesse dépend directement de la charge, et la moindre perturbation entraîne une variation notable.
+        </p>
+
+        <p>
+            La boucle fermée, quant à elle, a démontré l’importance du retour d’information. Grâce au PID, le
+            système devient robuste, précis, et capable de maintenir la vitesse malgré les perturbations. Le réglage
+            des gains Kp, Ki et Kd a permis d’observer les effets classiques : rapidité, dépassement, stabilité,
+            oscillations, erreur statique.
+        </p>
+
+        <p>
+            La régulation de position a ajouté une dimension supplémentaire : la commande hiérarchisée. La boucle
+            de position génère une consigne de vitesse, qui elle-même est régulée par la boucle interne. Ce principe
+            est utilisé dans les servomoteurs industriels, les robots, les imprimantes 3D, les CNC, etc.
+        </p>
+
+        <p>
+            Les visualisations dynamiques intégrées dans ce rapport permettent de comprendre intuitivement le
+            comportement du système : montée en vitesse, compensation de charge, stabilisation PID, suivi de
+            position. Elles offrent une représentation moderne et pédagogique du fonctionnement réel.
+        </p>
+
+        <p>
+            En conclusion, ce TP constitue une base solide pour aborder des systèmes plus complexes : moteurs
+            brushless, commande vectorielle, observateurs d’état, contrôle optimal, etc.
+        </p>
+    </section>
+
+    <!-- ==================== 9. CONCLUSION ==================== -->
+    <section class="section" id="conclusion">
+        <h2>9. Conclusion</h2>
+
+        <p>
+            Le TP5 a permis de comprendre et d’expérimenter les principes fondamentaux de la commande des
+            moteurs à courant continu : boucle ouverte, boucle fermée, PID, régulation de position. Les résultats
+            montrent clairement l’intérêt du retour d’information et du réglage PID pour obtenir un système stable,
+            précis et robuste.
+        </p>
+
+        <p class="muted">
+            Fin du compte rendu — TP5 Régulation de vitesse et de position d’un MCC à aimant permanent.
+        </p>
+    </section>
+
+</main>
+
+<!-- ==================== SCRIPTS CHART.JS ==================== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+/* ============================================================
+   GRAPH 1 — Boucle ouverte (simulation)
+   ============================================================ */
+const ctxBO = document.getElementById('chartBO').getContext('2d');
+let dataBO = {
+    labels: [],
+    datasets: [{
+        label: 'Vitesse mesurée (tr/min)',
+        data: [],
+        borderColor: '#00e0ff',
+        backgroundColor: 'rgba(0,224,255,0.2)',
+        borderWidth: 2,
+        tension: 0.2
+    },{
+        label: 'Consigne (tr/min)',
+        data: [],
+        borderColor: '#9b5cff',
+        backgroundColor: 'rgba(155,92,255,0.2)',
+        borderWidth: 2,
+        tension: 0.2
+    }]
+};
+
+const chartBO = new Chart(ctxBO, {
+    type: 'line',
+    data: dataBO,
+    options: {
+        responsive: true,
+        animation: false,
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+let tBO = 0;
+setInterval(() => {
+    tBO++;
+    let consigne = 500 + 300 * Math.sin(tBO / 20);
+    let charge = 0.3 + 0.2 * Math.sin(tBO / 15);
+    let vitesse = consigne * (1 - charge);
+
+    dataBO.labels.push('');
+    dataBO.datasets[0].data.push(vitesse);
+    dataBO.datasets[1].data.push(consigne);
+
+    if (dataBO.labels.length > 60) {
+        dataBO.labels.shift();
+        dataBO.datasets[0].data.shift();
+        dataBO.datasets[1].data.shift();
+    }
+
+    chartBO.update();
+}, 200);
+
+/* ============================================================
+   GRAPH 2 — Boucle fermée (simulation)
+   ============================================================ */
+const ctxBF = document.getElementById('chartBF').getContext('2d');
+let dataBF = {
+    labels: [],
+    datasets: [{
+        label: 'Vitesse mesurée (tr/min)',
+        data: [],
+        borderColor: '#00e0ff',
+        backgroundColor: 'rgba(0,224,255,0.2)',
+        borderWidth: 2,
+        tension: 0.2
+    },{
+        label: 'Consigne (tr/min)',
+        data: [],
+        borderColor: '#9b5cff',
+        backgroundColor: 'rgba(155,92,255,0.2)',
+        borderWidth: 2,
+        tension: 0.2
+    }]
+};
+
+const chartBF = new Chart(ctxBF, {
+    type: 'line',
+    data: dataBF,
+    options: {
+        responsive: true,
+        animation: false,
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+let tBF = 0;
+setInterval(() => {
+    tBF++;
+    let consigne = 500 + 300 * Math.sin(tBF / 25);
+    let charge = 0.3 + 0.2 * Math.sin(tBF / 18);
+    let vitesse = consigne * (1 - 0.05 * charge); // compensation PID
+
+    dataBF.labels.push('');
+    dataBF.datasets[0].data.push(vitesse);
+    dataBF.datasets[1].data.push(consigne);
+
+    if (dataBF.labels.length > 60) {
+        dataBF.labels.shift();
+        dataBF.datasets[0].data.shift();
+        dataBF.datasets[1].data.shift();
+    }
+
+    chartBF.update();
+}, 200);
+
+/* ============================================================
+   GRAPH 3 — Réponse PID (simulation)
+   ============================================================ */
+const ctxPID = document.getElementById('chartPID').getContext('2d');
+let dataPID = {
+    labels: [],
+    datasets: [{
+        label: 'Vitesse mesurée',
+        data: [],
+        borderColor: '#00e0ff',
+        backgroundColor: 'rgba(0,224,255,0.2)',
+        borderWidth: 2,
+        tension: 0.2
+    },{
+        label: 'Consigne',
+        data: [],
+        borderColor: '#9b5cff',
+        backgroundColor: 'rgba(155,92,255,0.2)',
+        borderWidth: 2,
+        tension: 0.2
+    }]
+};
+
+const chartPID = new Chart(ctxPID, {
+    type: 'line',
+    data: dataPID,
+    options: {
+        responsive: true,
+        animation: false,
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+let tPID = 0;
+let vitessePID = 0;
+setInterval(() => {
+    tPID++;
+
+    let consigne = 1500;
+    let erreur = consigne - vitessePID;
+
+    // PID simplifié
+    let Kp = 0.08;
+    let Ki = 0.002;
+    let Kd = 0.01;
+
+    let correction = Kp * erreur + Ki * (erreur * tPID) - Kd * (vitessePID - consigne);
+
+    vitessePID += correction * 0.5;
+
+    dataPID.labels.push('');
+    dataPID.datasets[0].data.push(vitessePID);
+    dataPID.datasets[1].data.push(consigne);
+
+    if (dataPID.labels.length > 60) {
+        dataPID.labels.shift();
+        dataPID.datasets[0].data.shift();
+        dataPID.datasets[1].data.shift();
+    }
+
+    chartPID.update();
+}, 200);
+
+/* ============================================================
+   GRAPH 4 — Position (simulation)
+   ============================================================ */
+const ctxPOS = document.getElementById('chartPOS').getContext('2d');
+let dataPOS = {
+    labels: [],
+    datasets: [{
+        label: 'Position réelle (°)',
+        data: [],
+        borderColor: '#00e0ff',
+        backgroundColor: 'rgba(0,224,255,0.2)',
+        borderWidth: 2,
+        tension: 0.2
+    },{
+        label: 'Consigne (°)',
+        data: [],
+        borderColor: '#9b5cff',
+        backgroundColor: 'rgba(155,92,255,0.2)',
+        borderWidth: 2,
+        tension: 0.2
+    }]
+};
+
+const chartPOS = new Chart(ctxPOS, {
+    type: 'line',
+    data: dataPOS,
+    options: {
+        responsive: true,
+        animation: false,
+        scales: { y: { beginAtZero: true, max: 360 } }
+    }
+});
+
+let tPOS = 0;
+let posReelle = 0;
+setInterval(() => {
+    tPOS++;
+
+    let consigne = (tPOS * 3) % 360;
+    let erreur = consigne - posReelle;
+
+    posReelle += erreur * 0.15; // correction position
+
+    dataPOS.labels.push('');
+    dataPOS.datasets[0].data.push(posReelle);
+    dataPOS.datasets[1].data.push(consigne);
+
+    if (dataPOS.labels.length > 60) {
+        dataPOS.labels.shift();
+        dataPOS.datasets[0].data.shift();
+        dataPOS.datasets[1].data.shift();
+    }
+
+    chartPOS.update();
+}, 200);
+</script>
+   <section class="section" id="synthese-pro">
+        <h2>10. Synthèse professionnelle</h2>
+
+        <p>
+            Ce TP a permis d’explorer de manière progressive et structurée les différentes stratégies de commande
+            d’un moteur à courant continu à aimant permanent. La démarche adoptée — allant de la boucle ouverte
+            vers la boucle fermée, puis vers la régulation de position — a mis en évidence l’importance du retour
+            d’information et du réglage des correcteurs pour garantir stabilité, précision et robustesse.
+        </p>
+
+        <p>
+            Les résultats obtenus montrent clairement que :
+        </p>
+
+        <ul>
+            <li>la <strong>boucle ouverte</strong> est simple mais très sensible aux perturbations,</li>
+            <li>la <strong>boucle fermée</strong> améliore considérablement la tenue en charge,</li>
+            <li>le <strong>PID</strong> permet d’obtenir un comportement dynamique performant,</li>
+            <li>la <strong>régulation de position</strong> repose sur une architecture hiérarchisée efficace.</li>
+        </ul>
+
+        <p>
+            L’intégration de visualisations dynamiques a permis de rendre le comportement du système plus intuitif,
+            en illustrant en temps réel les effets de la charge, des variations de consigne et des réglages PID.
+        </p>
+    </section>
+
+    <!-- ==================== 11. CONCLUSION GÉNÉRALE ==================== -->
+    <section class="section" id="conclusion-generale">
+        <h2>11. Conclusion générale</h2>
+
+        <p>
+            Le TP5 constitue une étape essentielle dans la compréhension des systèmes d’entraînement électriques.
+            Il démontre que la performance d’un moteur ne dépend pas uniquement de ses caractéristiques
+            électromécaniques, mais surtout de la stratégie de commande mise en œuvre.
+        </p>
+
+        <p>
+            La transition de la boucle ouverte vers la boucle fermée illustre parfaitement le rôle fondamental du
+            retour d’information dans les systèmes automatiques. Le réglage du PID, quant à lui, met en lumière
+            l’importance de l’optimisation des paramètres pour obtenir un compromis satisfaisant entre rapidité,
+            précision et stabilité.
+        </p>
+
+        <p>
+            Enfin, la régulation de position montre comment une architecture multi‑boucles permet d’atteindre des
+            performances élevées, en combinant précision angulaire et robustesse mécanique.
+        </p>
+
+        <p class="muted">
+            Ce travail prépare naturellement aux commandes plus avancées : commande vectorielle, observateurs
+            d’état, contrôle optimal, et systèmes embarqués modernes.
+        </p>
+    </section>
+  <p style="margin-top:2rem;">
+            <strong>Fait à l’USTHB, le :</strong> 15-12-2025
+        </p>
+
+        <p style="margin-top:1rem;">
+            <strong>Signature de l’étudiant :</strong> DAHANE AHMED LAMINE 
+        </p>
+
+      
+  
+    </section>
+  <p style="margin-top: 2rem; font-size: 0.8rem; color: var(--muted);">
+        © 2025 — Faculté de Génie Électrique — DAHANE AHMED LAMINE
+    </p>
+</body>
+</html>
+
+
