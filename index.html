@@ -36,15 +36,6 @@
             margin: 2rem auto 3rem auto;
             padding: 0 1.6rem;
         }
-        canvas {
-            margin-top: 40px;
-            margin-bottom: 20px;
-        }
-
-           .chart-controls {
-           margin-bottom: 50px;
-        }
-
 
         .section {
             background: var(--card);
@@ -214,8 +205,8 @@
                 <th>Année universitaire</th>
             </tr>
             <tr>
-                <td>Amin</td>
-                <td>Gxx</td>
+                <td>DAHANE AHMED LAMINE</td>
+                <td>SG2</td>
                 <td>2025–2026</td>
             </tr>
         </table>
@@ -228,8 +219,8 @@
             </tr>
             <tr>
                 <td>Machines Électriques / Commande</td>
-                <td>----</td>
-                <td>----</td>
+                <td>Mr-LAIB</td>
+                <td>15-12-2025</td>
             </tr>
         </table>
 
@@ -242,17 +233,17 @@
                 <th>Points obtenus</th>
                 <th>Observations</th>
             </tr>
-            <tr><td>Préparation théorique</td><td>4</td><td></td><td></td></tr>
-            <tr><td>Boucle ouverte (Tableaux + analyse)</td><td>4</td><td></td><td></td></tr>
-            <tr><td>Boucle fermée (PID + robustesse)</td><td>4</td><td></td><td></td></tr>
-            <tr><td>Position (Tableau + analyse)</td><td>3</td><td></td><td></td></tr>
-            <tr><td>Compte rendu global</td><td>3</td><td></td><td></td></tr>
-            <tr><td>Présentation & structure</td><td>2</td><td></td><td></td></tr>
+            <tr><td>Préparation théorique</td><td></td><td></td><td></td></tr>
+            <tr><td>Boucle ouverte (Tableaux + analyse)</td><td></td><td></td><td></td></tr>
+            <tr><td>Boucle fermée (PID + robustesse)</td><td></td><td></td><td></td></tr>
+            <tr><td>Position (Tableau + analyse)</td><td></td><td></td><td></td></tr>
+            <tr><td>Compte rendu global</td><td></td><td></td><td></td></tr>
+            <tr><td>Présentation & structure</td><td></td><td></td><td></td></tr>
             <tr><th>Total</th><th>20</th><th></th><th></th></tr>
         </table>
 
         <p style="margin-top:1.5rem; text-align:left;">
-            Signature de l’enseignant : ___________________________________________
+            Signature de l’enseignant :
         </p>
 
     </section>
@@ -268,7 +259,7 @@
             <tr><td><a href="#bf">4. Contrôle de vitesse en boucle fermée (PID)</a></td><td>4</td></tr>
             <tr><td><a href="#position">5. Contrôle automatique de position</a></td><td>5</td></tr>
             <tr><td><a href="#analyse">6. Analyse globale</a></td><td>6</td></tr>
-            <tr><td><a href="#grand-cr">7. Grand compte rendu approfondi</a></td><td>7</td></tr>
+            <tr><td><a href="#grand-cr">7. Compte rendu approfondi</a></td><td>7</td></tr>
             <tr><td><a href="#conclusion">8. Conclusion</a></td><td>8</td></tr>
         </table>
     </section>
@@ -566,59 +557,26 @@ Le PID corrige :
         </div>
     </section>
     <!-- ==================== 6. VISUALISATIONS DYNAMIQUES ==================== -->
-    <section class="section" id="visualisations-separees">
-    <h2>6. Visualisations dynamiques (pages séparées)</h2>
+    <section class="section" id="visualisations">
+        <h2>6. Visualisations dynamiques (temps réel)</h2>
 
-    <p>Chaque visualisation est maintenant isolée dans une page dédiée pour garantir un fonctionnement optimal.</p>
+        <p>
+            Les graphiques suivants simulent en temps réel le comportement du moteur dans les différents modes
+            de commande : boucle ouverte, boucle fermée, PID, et régulation de position.
+        </p>
 
-    <div class="chart-controls">
-        <a href="bo.html"><button>6.1 Boucle ouverte</button></a>
-        <a href="bf.html"><button>6.2 Boucle fermée</button></a>
-        <a href="pid.html"><button>6.3 Réponse PID</button></a>
-        <a href="pos.html"><button>6.4 Position</button></a>
-    </div>
-</section>
-    <section class="section" id="bo">
-    <h2>6.1 Boucle ouverte — Vitesse mesurée vs consigne</h2>
+        <h3>6.1 Boucle ouverte — Vitesse mesurée vs consigne</h3>
+        <canvas id="chartBO" height="120"></canvas>
 
-    <canvas id="chartBO" height="120"></canvas>
+        <h3>6.2 Boucle fermée — Vitesse mesurée vs consigne</h3>
+        <canvas id="chartBF" height="120"></canvas>
 
-    <div class="chart-controls">
-        <button onclick="startBO()">Start</button>
-        <button onclick="stopBO()">Stop</button>
-    </div>
-</section>
-<section class="section" id="bf">
-    <h2>6.2 Boucle fermée — Vitesse mesurée vs consigne</h2>
+        <h3>6.3 Réponse du PID — Suivi de consigne</h3>
+        <canvas id="chartPID" height="120"></canvas>
 
-    <canvas id="chartBF" height="120"></canvas>
-
-    <div class="chart-controls">
-        <button onclick="startBF()">Start</button>
-        <button onclick="stopBF()">Stop</button>
-    </div>
-</section>
-<section class="section" id="pid">
-    <h2>6.3 Réponse PID — Suivi de consigne</h2>
-
-    <canvas id="chartPID" height="120"></canvas>
-
-    <div class="chart-controls">
-        <button onclick="startPID()">Start</button>
-        <button onclick="stopPID()">Stop</button>
-    </div>
-</section>
-<section class="section" id="pos">
-    <h2>6.4 Régulation de position — Position réelle vs consigne</h2>
-
-    <canvas id="chartPOS" height="120"></canvas>
-
-    <div class="chart-controls">
-        <button onclick="startPOS()">Start</button>
-        <button onclick="stopPOS()">Stop</button>
-    </div>
-</section>
-
+        <h3>6.4 Régulation de position — Position réelle vs consigne</h3>
+        <canvas id="chartPOS" height="120"></canvas>
+    </section>
 
     <!-- ==================== 7. ANALYSE GLOBALE ==================== -->
     <section class="section" id="analyse">
@@ -645,7 +603,7 @@ Le PID corrige :
 
     <!-- ==================== 8. GRAND COMPTE RENDU APPROFONDI ==================== -->
     <section class="section" id="grand-cr">
-        <h2>8. Grand compte rendu approfondi</h2>
+        <h2>8. Compte rendu approfondi</h2>
 
         <p>
             Ce TP a permis d’explorer en profondeur les principes de régulation appliqués à un moteur à courant
@@ -986,169 +944,6 @@ setInterval(() => {
         <p style="margin-top:1rem;">
             <strong>Signature de l’étudiant :</strong> DAHANE AHMED LAMINE 
         </p>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-
-    function createInterval(callback, delay) {
-        let id = null;
-        return {
-            start() { if (!id) id = setInterval(callback, delay); },
-            stop() { if (id) { clearInterval(id); id = null; } }
-        };
-    }
-
-    /* ============================
-       6.1 Boucle ouverte
-       ============================ */
-    const ctxBO = document.getElementById('chartBO').getContext('2d');
-    const dataBO = { labels: [], datasets: [
-        { label: 'Vitesse mesurée', data: [], borderColor: '#00e0ff', borderWidth: 2, tension: 0.25 },
-        { label: 'Consigne', data: [], borderColor: '#9b5cff', borderWidth: 2, tension: 0.25 }
-    ]};
-
-    const chartBO = new Chart(ctxBO, { type: 'line', data: dataBO, options: { animation: false }});
-    let tBO = 0;
-
-    const intervalBO = createInterval(() => {
-        tBO++;
-        let consigne = 500 + 300 * Math.sin(tBO / 20);
-        let charge = 0.3 + 0.2 * Math.sin(tBO / 15);
-        let vitesse = consigne * (1 - charge);
-
-        dataBO.labels.push('');
-        dataBO.datasets[0].data.push(vitesse);
-        dataBO.datasets[1].data.push(consigne);
-
-        if (dataBO.labels.length > 60) {
-            dataBO.labels.shift();
-            dataBO.datasets[0].data.shift();
-            dataBO.datasets[1].data.shift();
-        }
-
-        chartBO.update();
-    }, 200);
-
-    window.startBO = () => intervalBO.start();
-    window.stopBO = () => intervalBO.stop();
-
-
-    /* ============================
-       6.2 Boucle fermée
-       ============================ */
-    const ctxBF = document.getElementById('chartBF').getContext('2d');
-    const dataBF = { labels: [], datasets: [
-        { label: 'Vitesse mesurée', data: [], borderColor: '#00e0ff', borderWidth: 2, tension: 0.25 },
-        { label: 'Consigne', data: [], borderColor: '#9b5cff', borderWidth: 2, tension: 0.25 }
-    ]};
-
-    const chartBF = new Chart(ctxBF, { type: 'line', data: dataBF, options: { animation: false }});
-    let tBF = 0;
-
-    const intervalBF = createInterval(() => {
-        tBF++;
-        let consigne = 500 + 300 * Math.sin(tBF / 25);
-        let charge = 0.3 + 0.2 * Math.sin(tBF / 18);
-        let vitesse = consigne * (1 - 0.05 * charge);
-
-        dataBF.labels.push('');
-        dataBF.datasets[0].data.push(vitesse);
-        dataBF.datasets[1].data.push(consigne);
-
-        if (dataBF.labels.length > 60) {
-            dataBF.labels.shift();
-            dataBF.datasets[0].data.shift();
-            dataBF.datasets[1].data.shift();
-        }
-
-        chartBF.update();
-    }, 200);
-
-    window.startBF = () => intervalBF.start();
-    window.stopBF = () => intervalBF.stop();
-
-
-    /* ============================
-       6.3 PID
-       ============================ */
-    const ctxPID = document.getElementById('chartPID').getContext('2d');
-    const dataPID = { labels: [], datasets: [
-        { label: 'Vitesse mesurée', data: [], borderColor: '#00e0ff', borderWidth: 2, tension: 0.25 },
-        { label: 'Consigne', data: [], borderColor: '#9b5cff', borderWidth: 2, tension: 0.25 }
-    ]};
-
-    const chartPID = new Chart(ctxPID, { type: 'line', data: dataPID, options: { animation: false }});
-    let tPID = 0;
-    let vitessePID = 0;
-
-    const intervalPID = createInterval(() => {
-        tPID++;
-
-        let consigne = 1500;
-        let erreur = consigne - vitessePID;
-
-        let Kp = 0.08, Ki = 0.002, Kd = 0.01;
-        let correction = Kp * erreur + Ki * (erreur * tPID) - Kd * (vitessePID - consigne);
-
-        vitessePID += correction * 0.5;
-
-        dataPID.labels.push('');
-        dataPID.datasets[0].data.push(vitessePID);
-        dataPID.datasets[1].data.push(consigne);
-
-        if (dataPID.labels.length > 60) {
-            dataPID.labels.shift();
-            dataPID.datasets[0].data.shift();
-            dataPID.datasets[1].data.shift();
-        }
-
-        chartPID.update();
-    }, 200);
-
-    window.startPID = () => intervalPID.start();
-    window.stopPID = () => intervalPID.stop();
-
-
-    /* ============================
-       6.4 Position
-       ============================ */
-    const ctxPOS = document.getElementById('chartPOS').getContext('2d');
-    const dataPOS = { labels: [], datasets: [
-        { label: 'Position réelle', data: [], borderColor: '#00e0ff', borderWidth: 2, tension: 0.25 },
-        { label: 'Consigne', data: [], borderColor: '#9b5cff', borderWidth: 2, tension: 0.25 }
-    ]};
-
-    const chartPOS = new Chart(ctxPOS, { type: 'line', data: dataPOS, options: { animation: false }});
-    let tPOS = 0;
-    let posReelle = 0;
-
-    const intervalPOS = createInterval(() => {
-        tPOS++;
-
-        let consigne = (tPOS * 3) % 360;
-        let erreur = consigne - posReelle;
-
-        posReelle += erreur * 0.15;
-
-        dataPOS.labels.push('');
-        dataPOS.datasets[0].data.push(posReelle);
-        dataPOS.datasets[1].data.push(consigne);
-
-        if (dataPOS.labels.length > 60) {
-            dataPOS.labels.shift();
-            dataPOS.datasets[0].data.shift();
-            dataPOS.datasets[1].data.shift();
-        }
-
-        chartPOS.update();
-    }, 200);
-
-    window.startPOS = () => intervalPOS.start();
-    window.stopPOS = () => intervalPOS.stop();
-
-});
-</script>
 
       
   
