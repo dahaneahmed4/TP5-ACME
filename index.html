@@ -380,10 +380,10 @@ Le PID corrige :
 
         <div class="diagramme">
             <pre><code>Figure 2 – Commande en boucle ouverte d’un MCC
-
-    SET-POINT           PWM & POWER AMP.          MCC AP + Tacho
-   (référence)      →     G36A        →        TY36A (moteur + charge)
-
+  ╔══════════════╗       ╔══════════════╗         ╔════════════════════╗
+  ║  SET-POINT   ║       ║ PWM&POWER AMP║         ║  MCC AP + Tacho    ║
+  ║  (référence) ║ ────→ ║    G36A      ║ ────→   ║TY36A(moteur+charge)║
+  ╚══════════════╝       ╚══════════════╝         ╚════════════════════╝
    U_ref  ─────────→ [Modulation PWM] ─────────→ U_M(t) → Moteur → ω
 
    Pas de retour de vitesse : la vitesse dépend fortement de la charge.
@@ -465,10 +465,16 @@ Le PID corrige :
    Consigne vitesse
         │
         ▼
-    SET-POINT ──► ERROR AMP 1 ──► PID (Kp, Ki, Kd) ──► PWM ──► Moteur
-                                ▲
-                                │
-                   Tacho-generator conditioner (mesure vitesse)
+   ╔═════════╗   ╔══════════╗   ╔════════════════╗   ╔═══╗   ╔══════╗
+   ║SET-POINT║──►║ERROR AMP1║──►║PID (Kp, Ki, Kd)║──►║PWM║──►║Moteur║ 
+   ╚═════════╝   ╚══════════╝   ╚════════════════╝   ╚═══╝   ╚══════╝
+                
+                                 ▲
+                                 │
+                ╔══════════════════════════════════════════════════════╗             │
+                ║  Tacho-generator conditioner (mesure vitesse)        ║
+                ╚══════════════════════════════════════════════════════╝
+                
 </code></pre>
         </div>
 
